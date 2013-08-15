@@ -8,10 +8,10 @@ Gem::Specification.new do |spec|
   spec.version       = Rtree::VERSION
   spec.authors       = ["Andrew Newman"]
   spec.email         = ["andrew.newman@sdx.com.au"]
-  spec.description   = %q{TODO: Write a gem description}
-  spec.summary       = %q{TODO: Write a gem summary}
+  spec.description   = %q{A set of implementations of different types of RTree}
+  spec.summary       = %q{Implementation of original RTree data structure as well as others}
   spec.homepage      = ""
-  spec.license       = "MIT"
+  spec.license       = "Apache License Version 2.0"
 
   spec.files         = `git ls-files`.split($/)
   spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
