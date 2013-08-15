@@ -1,4 +1,12 @@
 class BoundingBox < Struct.new(:top_left, :bottom_right)
+  def self.total_bounding_box(bounding_boxes)
+    x0 = bounding_boxes.min { |a,b| a.top_left.x <=> b.top_left.x }.top_left.x
+    y0 = bounding_boxes.min { |a,b| a.top_left.y <=> b.top_left.y }.top_left.y
+    x1 = bounding_boxes.max { |a,b| a.bottom_right.x <=> b.bottom_right.x }.bottom_right.x
+    y1 = bounding_boxes.max { |a,b| a.bottom_right.y <=> b.bottom_right.y }.bottom_right.y
+    BoundingBox.new(Point.new(x0, y0), Point.new(x1, y1))
+  end
+
   def overlap(other_bounding_box)
     x0, y0 = self.top_left.x, self.top_left.y
     x1, y1 = self.bottom_right.x, self.bottom_right.y

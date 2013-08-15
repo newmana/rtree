@@ -17,21 +17,57 @@ describe BoundingBox do
     @r10  = BoundingBox.new(Point.new(0.1, 0.1), Point.new(0.8, 0.2))
   end
 
-  describe "BoundingBox" do
-    it "overlaps" do
-      @r0.overlap(@r1).must_be :==, true
-      @r0.overlap(@r2).must_be :==, true
-      @r0.overlap(@r3).must_be :==, true
-      @r0.overlap(@r4).must_be :==, true
-      @r0.overlap(@r5).must_be :==, true
-      @r0.overlap(@r6).must_be :==, true
-      @r0.overlap(@r7).must_be :==, true
+  describe "BoundingBox", "overlap" do
+    it "inside" do
+      @r0.overlap(@r1).must_equal true
+      @r0.overlap(@r2).must_equal true
     end
 
-    it "doesn't overlap" do
-      @r0.overlap(@r8).must_be :==, false
-      @r0.overlap(@r9).must_be :==, false
-      @r0.overlap(@r10).must_be :==, false
+    it "intersects" do
+      @r0.overlap(@r3).must_equal true
+      @r0.overlap(@r4).must_equal true
+      @r0.overlap(@r5).must_equal true
+      @r0.overlap(@r6).must_equal true
+      @r0.overlap(@r7).must_equal true
+    end
+
+    it "outside" do
+      @r0.overlap(@r8).must_equal false
+      @r0.overlap(@r9).must_equal false
+      @r0.overlap(@r10).must_equal false
+    end
+  end
+
+  describe "BoundingBox", "total bounding box" do
+    it "same box" do
+      total = BoundingBox.total_bounding_box([@r0, @r0])
+      total.top_left.must_equal @r0.top_left
+      total.bottom_right.must_equal @r0.bottom_right
+    end
+
+    it "smaller box" do
+      total = BoundingBox.total_bounding_box([@r0, @r1])
+      total.top_left.must_equal @r0.top_left
+      total.bottom_right.must_equal @r0.bottom_right
+    end
+
+    it "larger box" do
+      total = BoundingBox.total_bounding_box([@r0, @r2])
+      total.top_left.must_equal @r2.top_left
+      total.bottom_right.must_equal @r2.bottom_right
+    end
+
+    it "off to the left box" do
+      total = BoundingBox.total_bounding_box([@r0, @r8])
+      total.top_left.must_equal @r8.top_left
+      total.bottom_right.must_equal @r0.bottom_right
+    end
+
+    it "overlapping" do
+      total = BoundingBox.total_bounding_box([@r0, @r7])
+      total.top_left.must_equal @r0.top_left
+      total.bottom_right.x.must_equal @r0.bottom_right.x
+      total.bottom_right.y.must_equal @r7.bottom_right.y
     end
   end
 end
