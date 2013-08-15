@@ -40,31 +40,31 @@ describe BoundingBox do
 
   describe "BoundingBox", "total bounding box" do
     it "same box" do
-      total = BoundingBox.minimum_bounding_box([@r0, @r0])
+      total = BoundingBox.minimum_bounding_rectangle([@r0, @r0])
       total.top_left.must_equal @r0.top_left
       total.bottom_right.must_equal @r0.bottom_right
     end
 
     it "smaller box" do
-      total = BoundingBox.minimum_bounding_box([@r0, @r1])
+      total = BoundingBox.minimum_bounding_rectangle([@r0, @r1])
       total.top_left.must_equal @r0.top_left
       total.bottom_right.must_equal @r0.bottom_right
     end
 
     it "larger box" do
-      total = BoundingBox.minimum_bounding_box([@r0, @r2])
+      total = BoundingBox.minimum_bounding_rectangle([@r0, @r2])
       total.top_left.must_equal @r2.top_left
       total.bottom_right.must_equal @r2.bottom_right
     end
 
     it "off to the left box" do
-      total = BoundingBox.minimum_bounding_box([@r0, @r8])
+      total = BoundingBox.minimum_bounding_rectangle([@r0, @r8])
       total.top_left.must_equal @r8.top_left
       total.bottom_right.must_equal @r0.bottom_right
     end
 
     it "overlapping" do
-      total = BoundingBox.minimum_bounding_box([@r0, @r7])
+      total = BoundingBox.minimum_bounding_rectangle([@r0, @r7])
       total.top_left.must_equal @r0.top_left
       total.bottom_right.x.must_equal @r0.bottom_right.x
       total.bottom_right.y.must_equal @r7.bottom_right.y
