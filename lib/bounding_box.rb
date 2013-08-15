@@ -1,5 +1,5 @@
 class BoundingBox < Struct.new(:top_left, :bottom_right)
-  def self.total_bounding_box(bounding_boxes)
+  def self.minimum_bounding_box(bounding_boxes)
     x0 = bounding_boxes.min { |a,b| a.top_left.x <=> b.top_left.x }.top_left.x
     y0 = bounding_boxes.min { |a,b| a.top_left.y <=> b.top_left.y }.top_left.y
     x1 = bounding_boxes.max { |a,b| a.bottom_right.x <=> b.bottom_right.x }.bottom_right.x
