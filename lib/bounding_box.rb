@@ -1,4 +1,13 @@
 class BoundingBox < Struct.new(:top_left, :bottom_right)
+
+  def self.from_points(points)
+    x0 = points.min { |a,b| a.x <=> b.x }.x
+    y0 = points.min { |a,b| a.y <=> b.y }.y
+    x1 = points.max { |a,b| a.x <=> b.x }.x
+    y1 = points.max { |a,b| a.y <=> b.y }.y
+    BoundingBox.new(Point.new(x0, y0), Point.new(x1, y1))
+  end
+
   def self.minimum_bounding_rectangle(bounding_boxes)
     x0 = bounding_boxes.min { |a,b| a.top_left.x <=> b.top_left.x }.top_left.x
     y0 = bounding_boxes.min { |a,b| a.top_left.y <=> b.top_left.y }.top_left.y
