@@ -58,16 +58,17 @@ buildInnerNodes m nodes
 buildPackedRTree :: Int -> [Shape] -> RNode
 buildPackedRTree m shapes = head $ buildInnerNodes m $ map (\shapes -> (Leaf (shapesBoundingBox shapes) shapes)) splittedShapeList
    where 
-      splittedShapeList = splitList m sortedShapes
-      sortedShapes = sortBy (comparing (\s -> let (lowerLeft,_) = shapeBb s in lowerLeft)) shapes
+      splittedShapeList = splitList m $ sortedShapes shapes
       shapesBoundingBox shapes = totalBoundingBox $ map (\s -> shapeBb s) shapes
+
+sortedShapes :: [Shape] -> [Shape]
+sortedShapes shapes = sortBy (comparing (\s -> let (lowerLeft,_) = shapeBb s in lowerLeft)) shapes
 
 searchNodes :: RNode -> BoundingBox -> [RNode]
 searchNodes (Leaf nodeBb shapes) bb = if testBoundingBoxOverlap nodeBb bb then [(Leaf nodeBb shapes)] else []
 searchNodes (Inner _ entries) bb = concatMap (\n -> searchNodes n bb) (filteredrNodes)
    where
       filteredrNodes = filter (\n -> testBoundingBoxOverlap (nodeBb n) bb) entries
- 
  
 queryRTree :: RNode -> BoundingBox -> [Shape]
 queryRTree root bb = filter (\n -> testBoundingBoxOverlap (shapeBb n) bb) allShapes
