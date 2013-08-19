@@ -13,11 +13,16 @@ describe Shape do
     @p4 = Point.new(0.6, 0.6)
     @p5 = Point.new(0.9, 0.9)
     @p6 = Point.new(0.1, 0.1)
+    @p7 = Point.new(0.25, 0.5)
+    @p8 = Point.new(0.5, 0.5)
+    @p9 = Point.new(0.25, 0.6)
     @points1 = [@p3, @p4, @p5]
     @points2 = [@p1, @p2, @p6]
+    @points3 = [@p7, @p8]
     @poly1 = Polygon.new(@points1, BoundingBox.from_points(@points1))
     @poly2 = Polygon.new(@points2, BoundingBox.from_points(@points2))
     @polyline1 = Polyline.new(@points1, BoundingBox.from_points(@points1))
+    @polyline2 = Polyline.new(@points3, BoundingBox.from_points(@points3))
   end
 
   describe "Shape", "sort" do
@@ -49,6 +54,11 @@ describe Shape do
     it "swap polyline" do
       shapes = Shape.sort_by_bounding_box([@p2, @polyline1])
       shapes.must_equal [@polyline1, @p2]
+    end
+
+    it "check many points" do
+      shapes = Shape.sort_by_bounding_box([@p1, @p9, @p5, @polyline2])
+      shapes.must_equal [@p1, @polyline2, @p9, @p5]
     end
   end
 end

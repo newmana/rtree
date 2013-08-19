@@ -5,8 +5,8 @@ import Data.Ord
 
 type Point = (Float,Float)
 type BoundingBox = (Point,Point)
-data Shape = Polyline [Point] BoundingBox | Polygon [Point] BoundingBox | Pointtype Point deriving (Show)
-data RNode = Inner BoundingBox [RNode] | Leaf BoundingBox [Shape] deriving (Show)
+data Shape = Polyline [Point] BoundingBox | Polygon [Point] BoundingBox | Pointtype Point deriving (Show, Eq)
+data RNode = Inner BoundingBox [RNode] | Leaf BoundingBox [Shape] deriving (Show, Eq)
 
 shapeBb (Polyline _ bb) = bb
 shapeBb (Polygon _ bb) = bb
@@ -83,4 +83,5 @@ s1 = Pointtype p1
 s2 = Pointtype p2
 s3 = Pointtype p3
 s4 = Polyline [(1.0, 1.5), (1.5, 1.5)] ((1.0,1.5),(1.5, 1.5))
-rtree = buildPackedRTree 3 [s1, s2, s3, s4]
+rtree1 = buildPackedRTree 3 [s1, s2, s3, s4]
+rtree2 = buildPackedRTree 3 [s3, s2, s4, s1]
