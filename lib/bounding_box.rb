@@ -8,6 +8,10 @@ class BoundingBox < Struct.new(:top_left, :bottom_right)
     BoundingBox.new(Point.new(x0, y0), Point.new(x1, y1))
   end
 
+  def self.merged_bound_box(shapes)
+    self.minimum_bounding_rectangle(shapes.map { |s| s.bounding_box })
+  end
+
   def self.minimum_bounding_rectangle(bounding_boxes)
     x0 = bounding_boxes.min { |a,b| a.top_left.x <=> b.top_left.x }.top_left.x
     y0 = bounding_boxes.min { |a,b| a.top_left.y <=> b.top_left.y }.top_left.y

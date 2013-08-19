@@ -10,6 +10,9 @@ describe BoundingBox do
     @p4 = Point.new(0.6, 0.6)
     @p5 = Point.new(0.9, 0.9)
     @p6 = Point.new(0.1, 0.1)
+    @p7 = Point.new(0.25, 0.5)
+    @p8 = Point.new(0.5, 0.5)
+    @p9 = Point.new(0.25, 0.6)
     @r0 = BoundingBox.new(@p1, @p2)
     @r1 = BoundingBox.new(@p3, @p4)
     @r2 = BoundingBox.new(@p6, @p5)
@@ -21,6 +24,13 @@ describe BoundingBox do
     @r8  = BoundingBox.new(@p6, Point.new(0.2, 0.2))
     @r9  = BoundingBox.new(@p6, Point.new(0.2, 0.8))
     @r10  = BoundingBox.new(@p6, Point.new(0.8, 0.2))
+    @points1 = [@p3, @p4, @p5]
+    @points2 = [@p1, @p2, @p6]
+    @points3 = [@p7, @p8]
+    @poly1 = Polygon.new(@points1, BoundingBox.from_points(@points1))
+    @poly2 = Polygon.new(@points2, BoundingBox.from_points(@points2))
+    @polyline1 = Polyline.new(@points1, BoundingBox.from_points(@points1))
+    @polyline2 = Polyline.new(@points3, BoundingBox.from_points(@points3))
   end
 
   describe "BoundingBox", "overlap" do
@@ -88,6 +98,23 @@ describe BoundingBox do
       total.top_left.must_equal @r0.top_left
       total.bottom_right.x.must_equal @r0.bottom_right.x
       total.bottom_right.y.must_equal @r7.bottom_right.y
+    end
+  end
+
+  describe "Bounding Box", "merge" do
+    it "same shapes" do
+      bounding_box = BoundingBox.merged_bound_box([@p1, @p1])
+      bounding_box.must_equal BoundingBox.new(@p1, @p1)
+    end
+
+    it "two points" do
+      bounding_box = BoundingBox.merged_bound_box([@p1, @p2])
+      bounding_box.must_equal BoundingBox.new(@p1, @p2)
+    end
+
+    it "four shapes" do
+      bounding_box = BoundingBox.merged_bound_box([@poly1, @poly2, @polyline1, @polyline2])
+      bounding_box.must_equal BoundingBox.new(@p6, @p5)
     end
   end
 end

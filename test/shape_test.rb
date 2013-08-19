@@ -61,21 +61,4 @@ describe Shape do
       shapes.must_equal [@p1, @polyline2, @p9, @p5]
     end
   end
-
-  describe "Bounding Box", "merge" do
-    it "same shapes" do
-      bounding_box = Shape.merged_bound_box([@p1, @p1])
-      bounding_box.must_equal BoundingBox.new(@p1, @p1)
-    end
-
-    it "two points" do
-      bounding_box = Shape.merged_bound_box([@p1, @p2])
-      bounding_box.must_equal BoundingBox.new(@p1, @p2)
-    end
-
-    it "four shapes" do
-      bounding_box = Shape.merged_bound_box([@poly1, @poly2, @polyline1, @polyline2])
-      bounding_box.must_equal BoundingBox.new(@p6, @p5)
-    end
-  end
 end
