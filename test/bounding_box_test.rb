@@ -27,10 +27,10 @@ describe BoundingBox do
     @points1 = [@p3, @p4, @p5]
     @points2 = [@p1, @p2, @p6]
     @points3 = [@p7, @p8]
-    @poly1 = Polygon.new(@points1, BoundingBox.from_points(@points1))
-    @poly2 = Polygon.new(@points2, BoundingBox.from_points(@points2))
-    @polyline1 = Polyline.new(@points1, BoundingBox.from_points(@points1))
-    @polyline2 = Polyline.new(@points3, BoundingBox.from_points(@points3))
+    @poly1 = Polygon.new(BoundingBox.from_points(@points1), @points1)
+    @poly2 = Polygon.new(BoundingBox.from_points(@points2), @points2)
+    @polyline1 = Polyline.new(BoundingBox.from_points(@points1), @points1)
+    @polyline2 = Polyline.new(BoundingBox.from_points(@points3), @points3)
   end
 
   describe "BoundingBox", "overlap" do
