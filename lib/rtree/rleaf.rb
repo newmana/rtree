@@ -10,5 +10,9 @@ module Rtree
         Rleaf.from_shapes(shape_array)
       end
     end
+
+    def filter_by_bounding_box(search_bounding_box)
+      [Rleaf.new(bounding_box, shape_array)] if bounding_box.overlap(search_bounding_box)
+    end
   end
 end

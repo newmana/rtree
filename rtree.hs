@@ -47,7 +47,6 @@ splitList n xs
    | length xs <= n = [xs]
    | otherwise = [take n xs] ++ splitList n (drop n xs)
  
- 
 buildInnerNodes :: Int -> [RNode] -> [RNode]
 buildInnerNodes m nodes
    | length nodes == 1 = nodes
@@ -56,9 +55,9 @@ buildInnerNodes m nodes
       nodesBoundingBox nodes = totalBoundingBox $ map (\n -> nodeBb n) nodes   
        
 buildPackedRTree :: Int -> [Shape] -> RNode
-buildPackedRTree m shapes = head $ buildInnerNodes m $ map (\shapes -> (Leaf (shapesBoundingBox shapes) shapes)) splittedShapeList
+buildPackedRTree m shapes = head $ buildInnerNodes m $ map (\shapes -> (Leaf (shapesBoundingBox shapes) shapes)) splittedShapes
    where 
-      splittedShapeList = splitList m $ sortedShapes shapes
+      splittedShapes = splitList m $ sortedShapes shapes
       shapesBoundingBox shapes = totalBoundingBox $ map (\s -> shapeBb s) shapes
 
 sortedShapes :: [Shape] -> [Shape]

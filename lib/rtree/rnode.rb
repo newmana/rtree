@@ -13,5 +13,15 @@ module Rtree
       end
       Rnode.build_nodes(chunks, nodes)
     end
+
+    def self.build(chunks, shapes)
+      leaves = Rtree::Rleaf.split_shapes(chunks, shapes)
+      Rtree::Rnode.build_nodes(chunks, leaves).first
+    end
+
+    def filter_by_bounding_box(search_bounding_box)
+      filtered_nodes = rnode_array.select { |node| node.bounding_box.overlap(search_bounding_box) }
+      filtered_nodes.flat_map { |node| node.filter_by_bounding_box(search_bounding_box) }
+    end
   end
 end
