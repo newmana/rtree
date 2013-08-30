@@ -23,5 +23,10 @@ module Rtree
       filtered_nodes = rnode_array.select { |node| node.bounding_box.overlap(search_bounding_box) }
       filtered_nodes.flat_map { |node| node.filter_by_bounding_box(search_bounding_box) }
     end
+
+    def query(search_bounding_box)
+      leaf = filter_by_bounding_box(search_bounding_box).first
+      leaf.shape_array.select { |shape| shape.bounding_box.overlap(search_bounding_box) }
+    end
   end
 end

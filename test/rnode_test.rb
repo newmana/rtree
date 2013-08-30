@@ -33,14 +33,14 @@ describe Rtree::Rnode do
   end
 
   describe "Get overlap", "all" do
-    it "search outside" do
+    it "filter outside of area" do
       tree = Rtree::Rnode.build(3, [@p1, @p4, @p5, @polyline1, @p6, @p7])
       bb_search = Rtree::BoundingBox.from_points([Rtree::Point.new(9.0, 9.0), Rtree::Point.new(10.5, 10.5)])
       result = tree.filter_by_bounding_box(bb_search)
       result.must_be_empty
     end
 
-    it "search over large, shallow tree" do
+    it "filter by bounding box over large, shallow tree" do
       tree = Rtree::Rnode.build(2, [@p1, @p4, @p5, @polyline1, @p6, @p7])
       tree.size.must_equal 2
       bb_search = Rtree::BoundingBox.from_points([Rtree::Point.new(0.5, 0.5), Rtree::Point.new(1.5, 1.5)])
@@ -51,7 +51,7 @@ describe Rtree::Rnode do
       leaf.shape_array.must_equal [@p1, @polyline1]
     end
 
-    it "matches with haskell" do
+    it "filter by bounding box matches with haskell" do
       tree = Rtree::Rnode.build(3, [@p1, @p2, @p3, @polyline1])
       tree.size.must_equal 2
       result = tree.filter_by_bounding_box(Rtree::BoundingBox.from_points([@p1, Rtree::Point.new(1.5, 1.5)]))
@@ -59,6 +59,15 @@ describe Rtree::Rnode do
       leaf = result.first
       leaf.bounding_box.must_equal Rtree::BoundingBox.from_points([@p1, Rtree::Point.new(1.5, 3.0)])
       leaf.shape_array.must_equal [@p1, @polyline1, @p3]
+    end
+  end
+
+  describe "Perform search", "all" do
+    it "query by bounding box matches with haskell" do
+      tree = Rtree::Rnode.build(3, [@p1, @p2, @p3, @polyline1])
+      tree.size.must_equal 2
+      result = tree.query(Rtree::BoundingBox.from_points([@p1, Rtree::Point.new(1.5, 1.5)]))
+      result.must_equal [@p1, @polyline1]
     end
   end
 end
