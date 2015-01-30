@@ -1,4 +1,5 @@
 -- Based on http://neonstorm242.blogspot.com.au/2011/02/spatial-range-queries-using-r-trees.html
+{-# LANGUAGE DeriveFunctor #-}
 
 import Data.List
 import Data.Ord
@@ -6,7 +7,7 @@ import Data.Ord
 type Point = (Float,Float)
 type BoundingBox = (Point,Point)
 data Shape = Polyline [Point] BoundingBox | Polygon [Point] BoundingBox | Pointtype Point deriving (Show, Eq)
-data RNode = Inner BoundingBox [RNode] | Leaf BoundingBox [Shape] deriving (Show, Eq)
+data RNode a = Inner a [RNode a] | Leaf a [Shape] deriving (Show, Eq, Functor)
 
 shapeBb (Polyline _ bb) = bb
 shapeBb (Polygon _ bb) = bb
@@ -47,14 +48,14 @@ splitList n xs
    | length xs <= n = [xs]
    | otherwise = [take n xs] ++ splitList n (drop n xs)
  
-buildInnerNodes :: Int -> [RNode] -> [RNode]
+buildInnerNodes :: Int -> [RNode BoundingBox] -> [RNode BoundingBox]
 buildInnerNodes m nodes
    | length nodes == 1 = nodes
    | otherwise = buildInnerNodes m $ map (\innerNodes -> (Inner (nodesBoundingBox innerNodes) innerNodes)) (splitList m nodes)
    where 
       nodesBoundingBox nodes = totalBoundingBox $ map (\n -> nodeBb n) nodes   
        
-buildPackedRTree :: Int -> [Shape] -> RNode
+buildPackedRTree :: Int -> [Shape] -> RNode BoundingBox
 buildPackedRTree m shapes = head $ buildInnerNodes m $ map (\shapes -> (Leaf (shapesBoundingBox shapes) shapes)) splittedShapes
    where 
       splittedShapes = splitList m $ sortedShapes shapes
@@ -63,13 +64,13 @@ buildPackedRTree m shapes = head $ buildInnerNodes m $ map (\shapes -> (Leaf (sh
 sortedShapes :: [Shape] -> [Shape]
 sortedShapes shapes = sortBy (comparing (\s -> let (lowerLeft,_) = shapeBb s in lowerLeft)) shapes
 
-searchNodes :: RNode -> BoundingBox -> [RNode]
+searchNodes :: RNode BoundingBox -> BoundingBox -> [RNode BoundingBox]
 searchNodes (Leaf nodeBb shapes) bb = if testBoundingBoxOverlap nodeBb bb then [(Leaf nodeBb shapes)] else []
 searchNodes (Inner _ entries) bb = concatMap (\n -> searchNodes n bb) (filteredrNodes)
    where
       filteredrNodes = filter (\n -> testBoundingBoxOverlap (nodeBb n) bb) entries
  
-queryRTree :: RNode -> BoundingBox -> [Shape]
+queryRTree :: RNode BoundingBox -> BoundingBox -> [Shape]
 queryRTree root bb = filter (\n -> testBoundingBoxOverlap (shapeBb n) bb) allShapes
    where 
       filteredLeafs = searchNodes root bb
